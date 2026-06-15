@@ -1,0 +1,26 @@
+venv/
+.env
+.venv/
+
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+
+*.log
+*.tmp
+*.bak
+
+# Dados e saídas geradas caso necessário (descomente se quiser versionar)
+# (evita versionar corpus grandes, gráficos e tabelas geradas)
+#data/raw/
+#data/processed/
+results/figures/
+results/tables/
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.ipynb_checkpoints/

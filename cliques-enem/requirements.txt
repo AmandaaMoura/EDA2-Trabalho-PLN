@@ -1,0 +1,6 @@
+spacy==3.5.4
+pandas>=1.5.0,<2.0.0
+matplotlib>=3.6.0
+
+# Para o modelo português:
+# python -m spacy download pt_core_news_sm
