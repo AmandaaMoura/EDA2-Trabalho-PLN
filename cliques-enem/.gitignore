@@ -12,10 +12,7 @@ __pycache__/
 *.tmp
 *.bak
 
-# Dados e saídas geradas caso necessário (descomente se quiser versionar)
-# (evita versionar corpus grandes, gráficos e tabelas geradas)
-#data/raw/
-#data/processed/
+data/processed/
 results/figures/
 results/tables/
 
