@@ -1,6 +1,7 @@
 """Estrutura do grafo em lista de adjacência."""
 
 import json
+from bfs import bfs
 
 class Graph:
     """Grafo não direcionado."""
@@ -116,16 +117,57 @@ def poda_peso_relativo(grafo, fator_media=FATOR_MEDIA, fator_max=FATOR_MAX):
             definir_aresta(novo, u, v, peso)
     return novo
 
+#poda das pontes é feita depois da poda de peso relativo e absoluto porque assim o grafo ja estara "mais limpo"
 
-corpus = carregar_corpus("data/processed/corpus_nota1000.json")
-g = construir_grafo_de_coocorrencia(corpus)
+def poda_pontes(grafo):
 
-print("ANTES:", estatisticas_grafo(g))
-g_podado = poda_peso_absoluto(g, min_peso=2)
-print("DEPOIS:", estatisticas_grafo(g_podado))
+    #vai selecionar as arestas que serem pontes (se remover a aresta desconecta o grafo) em um novo grafo
+    #usa o bfs para verificar se a aresta é uma ponte
 
-pesos = estatisticas_pesos(g)
-peso_1 = sum(1 for p in pesos if p == 1)
-print(f"Arestas com peso 1: {peso_1} de {len(pesos)}")
-print("DEPOIS:", estatisticas_grafo(g_podado))
-print("RELATIVO:", estatisticas_grafo(poda_peso_relativo(g, fator_media=0.5, fator_max=0.25)))
+    remover = set()
+    for u, v, _ in grafo.listar_arestas():
+        if not bfs(grafo, u, v, aresta_bloqueada=(u, v)):
+            remover.add((u, v))
+
+    novo = Graph()
+    for u, v, peso in grafo.listar_arestas():
+        if (u, v) not in remover:
+            definir_aresta(novo, u, v, peso)
+    return novo
+
+def aplicar_podas(grafo, min_peso=2, fator_media=0.5, fator_max=0.25, usar_pontes=True):
+    log = []
+
+    def registrar(etapa, g):
+        stats = estatisticas_grafo(g)
+        log.append({"etapa": etapa, **stats})
+        print(f"[{etapa}] vértices={stats['vertices']} arestas={stats['arestas']}")
+        return g
+
+    g = registrar("bruto", grafo)
+    g = registrar("poda_absoluta", poda_peso_absoluto(g, min_peso))
+    g = registrar("poda_relativa", poda_peso_relativo(g, fator_media, fator_max))
+    if usar_pontes:
+        g = registrar("poda_pontes", poda_pontes(g))
+    return g, log
+
+
+#para teste
+
+# corpus_a = carregar_corpus("data/processed/corpus_nota1000.json")
+# g_a, log_a = aplicar_podas(construir_grafo_de_coocorrencia(corpus_a))
+# corpus_b = carregar_corpus("data/processed/corpus_abaixo1000.json")
+# g_b, log_b = aplicar_podas(construir_grafo_de_coocorrencia(corpus_b))
+
+# corpus = carregar_corpus("data/processed/corpus_nota1000.json")
+# g = construir_grafo_de_coocorrencia(corpus)
+
+# print("ANTES:", estatisticas_grafo(g))
+# g_podado = poda_peso_absoluto(g, min_peso=2)
+# print("DEPOIS:", estatisticas_grafo(g_podado))
+
+# pesos = estatisticas_pesos(g)
+# peso_1 = sum(1 for p in pesos if p == 1)
+# print(f"Arestas com peso 1: {peso_1} de {len(pesos)}")
+# print("DEPOIS:", estatisticas_grafo(g_podado))
+# print("RELATIVO:", estatisticas_grafo(poda_peso_relativo(g, fator_media=0.5, fator_max=0.25)))
