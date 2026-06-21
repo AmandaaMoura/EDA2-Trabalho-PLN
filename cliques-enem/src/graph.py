@@ -1,5 +1,6 @@
 """Estrutura do grafo em lista de adjacência."""
 
+import json
 
 class Graph:
     """Grafo não direcionado."""
@@ -57,4 +58,74 @@ def construir_grafo_de_coocorrencia(corpus):
                     grafo.add_coocorrencia(sentenca[i], sentenca[j], 1)
     return grafo
 
+def carregar_corpus(caminho_json):
+    with open(caminho_json, "r", encoding="utf-8") as f:
+        return json.load(f)
 
+def estatisticas_grafo(grafo):
+    arestas = grafo.listar_arestas()
+    pesos = [peso for _, _, peso in arestas]
+    return {
+        "vertices": len(grafo.listar_vertices()),
+        "arestas": len(arestas),
+        "peso_medio": sum(pesos) / len(pesos) if pesos else 0,
+        "peso_max": max(pesos) if pesos else 0,
+    }
+
+def estatisticas_pesos(grafo):
+    #somente para pesos menores ao do vertice de referencia (usar na pode relativa dos vertices mais fracos)
+    return [p for _, _, p in grafo.listar_arestas()]
+
+MIN_PESO_ARESTA = 2
+
+def poda_peso_absoluto(grafo, min_peso=MIN_PESO_ARESTA): #vai selecionar as arestas com peso >=2 em um novo grafo
+    novo_grafo = Graph()
+    for u, v, peso in grafo.listar_arestas():
+        if peso >= min_peso:
+            definir_aresta(novo_grafo, u, v, peso)
+    return novo_grafo
+
+def definir_aresta(grafo, u, v, peso):  #nao soma os pesos igual ao add_coocorrencia, apenas define o peso, apos selecao anterior(poda)
+    grafo.vertices.add(u)
+    grafo.vertices.add(v)
+    grafo.adj.setdefault(u, {})
+    grafo.adj.setdefault(v, {})
+    grafo.adj[u][v] = peso
+    grafo.adj[v][u] = peso
+
+#podando em relacao ao peso medio e maximo do corpus
+
+FATOR_MEDIA = 0.5
+FATOR_MAX = 0.25
+
+def poda_peso_relativo(grafo, fator_media=FATOR_MEDIA, fator_max=FATOR_MAX):
+    
+    #vai selecionar as arestas com peso >= ao peso medio ou maximo do corpus em um novo grafo
+    
+    pesos = estatisticas_pesos(grafo)
+
+    if not pesos:
+        return Graph()
+    media = sum(pesos) / len(pesos)
+    max_peso = max(pesos)
+    limiar = max(fator_media * media, fator_max * max_peso)
+
+    novo = Graph()
+    for u, v, peso in grafo.listar_arestas():
+        if peso >= limiar:
+            definir_aresta(novo, u, v, peso)
+    return novo
+
+
+corpus = carregar_corpus("data/processed/corpus_nota1000.json")
+g = construir_grafo_de_coocorrencia(corpus)
+
+print("ANTES:", estatisticas_grafo(g))
+g_podado = poda_peso_absoluto(g, min_peso=2)
+print("DEPOIS:", estatisticas_grafo(g_podado))
+
+pesos = estatisticas_pesos(g)
+peso_1 = sum(1 for p in pesos if p == 1)
+print(f"Arestas com peso 1: {peso_1} de {len(pesos)}")
+print("DEPOIS:", estatisticas_grafo(g_podado))
+print("RELATIVO:", estatisticas_grafo(poda_peso_relativo(g, fator_media=0.5, fator_max=0.25)))
