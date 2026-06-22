@@ -24,8 +24,7 @@ def gerar_graficos_comparativos_globais(stats_a, stats_b):
         'Tamanho Máx. Clique',
         'Componentes Conexos',
         'Vértices Pós-Poda',
-        'Arestas Pós-Poda',
-        'Raio Semântico'
+        'Arestas Pós-Poda'
     ]
     valores_a = [
         stats_a['cliques']['total'],
@@ -33,8 +32,7 @@ def gerar_graficos_comparativos_globais(stats_a, stats_b):
         stats_a['cliques']['tamanho_maximo'],
         len(stats_a['componentes']),
         stats_a['grafo']['vertices'],
-        stats_a['grafo']['arestas'],
-        stats_a['raio_semantico']
+        stats_a['grafo']['arestas']
     ]
     valores_b = [
         stats_b['cliques']['total'],
@@ -42,8 +40,7 @@ def gerar_graficos_comparativos_globais(stats_a, stats_b):
         stats_b['cliques']['tamanho_maximo'],
         len(stats_b['componentes']),
         stats_b['grafo']['vertices'],
-        stats_b['grafo']['arestas'],
-        stats_b['raio_semantico']
+        stats_b['grafo']['arestas']
     ]
 
     df = pd.DataFrame({'Grupo A (Nota 1000)': valores_a, 'Grupo B (< 1000)': valores_b}, index=categorias)
@@ -56,26 +53,7 @@ def gerar_graficos_comparativos_globais(stats_a, stats_b):
     plt.savefig(os.path.join(PASTA_FIGURAS, 'analise_comparativa_metricas.png'))
     plt.close()
 
-    # 2. gráfico de distribuiçaõ de palavras por nível BFS
-    niveis_a = stats_a['palavras_por_nivel']
-    niveis_b = stats_b['palavras_por_nivel']
-    niveis = sorted(set(niveis_a) | set(niveis_b))
-
-    valores_niveis_a = [niveis_a.get(n, 0) for n in niveis]
-    valores_niveis_b = [niveis_b.get(n, 0) for n in niveis]
-
-    df_niveis = pd.DataFrame({'Grupo A': valores_niveis_a, 'Grupo B': valores_niveis_b}, index=niveis)
-    df_niveis.plot(kind='bar', figsize=(12, 6), color=['#2ca02c', '#d62728'], edgecolor='black')
-    plt.title('Distribuição de Palavras por Nível BFS')
-    plt.xlabel('Nível BFS')
-    plt.ylabel('Quantidade de Palavras')
-    plt.xticks(rotation=0)
-    plt.grid(axis='y', linestyle='--', alpha=0.5)
-    plt.tight_layout()
-    plt.savefig(os.path.join(PASTA_FIGURAS, 'distribuicao_palavras_por_nivel.png'))
-    plt.close()
-
-    # 3. gráfico de distribuição de tamanhos de cliques
+    # gráfico de distribuição de tamanhos de cliques
     dist_a = stats_a['cliques']['distribuicao']
     dist_b = stats_b['cliques']['distribuicao']
     
@@ -122,34 +100,11 @@ def analisar_grupo_global(caminho_corpus, label):
     cliques_encontrados = encontrar_cliques(g_podado, min_peso=2, tamanho_minimo=4)
     stats_c = estatisticas_cliques(cliques_encontrados)
     
-    # raio semântico e palavra por nível
-    vertices = g_podado.listar_vertices()
-    if vertices:
-        # determinação automática da semente usando o maior grau de conectividade
-        semente = max(vertices, key=lambda v: g_podado.grau(v))
-        
-        from bfs import bfs_niveis
-        niveis_dict = bfs_niveis(g_podado, semente)
-        
-        por_nivel = {}
-        for pal, nv in niveis_dict.items():
-            por_nivel.setdefault(nv, []).append(pal)
-            
-        raio_semantico = max(por_nivel.keys()) if por_nivel else 0
-        distribuicao_niveis = {nv: len(pals) for nv, pals in por_nivel.items()}
-    else:
-        semente = "N/A"
-        raio_semantico = 0
-        distribuicao_niveis = {}
-    
     return {
         "grafo": estatisticas_grafo(g_podado),
         "cliques": stats_c,
         "componentes": comp,
-        "lista_cliques": cliques_encontrados,
-        "semente_bfs": semente,
-        "raio_semantico": raio_semantico,
-        "palavras_por_nivel": distribuicao_niveis
+        "lista_cliques": cliques_encontrados
     }
 
 def main():
@@ -168,11 +123,6 @@ def main():
         print(f"{'Nº de Componentes Conexos':<40} | {len(dados_a['componentes']):<18} | {len(dados_b['componentes']):<18}")
         print(f"{'Vértices Restantes (Pós-Poda)':<40} | {dados_a['grafo']['vertices']:<18} | {dados_b['grafo']['vertices']:<18}")
         print(f"{'Arestas Restantes (Pós-Poda)':<40} | {dados_a['grafo']['arestas']:<18} | {dados_b['grafo']['arestas']:<18}")
-        semente_a = f'"{dados_a["semente_bfs"]}"'
-        semente_b = f'"{dados_b["semente_bfs"]}"'
-        print(f"{'Palavra Semente Escolhida (BFS)':<40} | {semente_a:<18} | {semente_b:<18}")
-        print(f"{'Raio Semântico (Nível Máx. BFS)':<40} | {dados_a['raio_semantico']:<18} | {dados_b['raio_semantico']:<18}")
-        print(f"{'Distribuição de Palavras por Nível':<40} | {str(dados_a['palavras_por_nivel']):<18} | {str(dados_b['palavras_por_nivel']):<18}")
         print(linha)
         
         # mapeamento quantitativo
