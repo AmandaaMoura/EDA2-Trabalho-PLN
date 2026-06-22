@@ -14,7 +14,7 @@ TAMANHO_MINIMO_CLIQUE = 4
 def filtrar_adjacencia(grafo: Graph, min_peso: int = MIN_PESO_ARESTA) -> dict:
 # constrói dicionário de adjacência filtrado por peso mínimo.
 # estrutura: { palavra: set(vizinhos com peso >= min_peso) }
-# Usar sets permite verificar adjacência em O(1) e fazer interseções eficientes durante a DFS.
+# Usar sets permite verificar adjacência em O(1) e fazer melhores interseções durante a DFS.
 
     adj = {}
     for vertice in grafo.listar_vertices():
