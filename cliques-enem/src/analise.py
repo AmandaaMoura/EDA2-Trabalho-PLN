@@ -118,8 +118,7 @@ def analisar_grupo_global(caminho_corpus, label):
         fator_max=0.12,   # valor ideal para coexistência de anos/temas
         usar_pontes=True
     )
-    
-    # componenetes conexos
+
     comp = componentes_conexos(g_podado)
     
     # enumeração completa de cliques
