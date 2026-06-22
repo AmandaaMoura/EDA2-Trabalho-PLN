@@ -180,20 +180,20 @@ def main():
         print(linha)
         
         # mapeamento quantitativo
-        print("\n--> Mapeamento e Relevância dos Principais Cliques Maximais:")
+        print("\n--> Mapeamento dos Cliques:")
         
-        print(f"\n  [Grupo A - Nota 1000] Núcleos Temáticos Consolidados:")
+        print(f"\n  [Grupo A - Nota 1000] - 30/30 Cliques:")
         cliques_ordenados_a = sorted(dados_a['lista_cliques'], key=len, reverse=True)
         if cliques_ordenados_a:
-            for i, clq in enumerate(cliques_ordenados_a[:3], 1):
+            for i, clq in enumerate(cliques_ordenados_a[:30], 1):
                 print(f"    {i}. Tamanho {len(clq)}: {sorted(list(clq))}")
         else:
             print("    Nenhum clique detectado com os parâmetros atuais.")
             
-        print(f"\n  [Grupo B - Nota < 1000] Núcleos Temáticos Fragmentados:")
+        print(f"\n  [Grupo B - Nota < 1000] - 30/96 Cliques:")
         cliques_ordenados_b = sorted(dados_b['lista_cliques'], key=len, reverse=True)
         if cliques_ordenados_b:
-            for i, clq in enumerate(cliques_ordenados_b[:5], 1):
+            for i, clq in enumerate(cliques_ordenados_b[:30], 1):
                 print(f"    {i}. Tamanho {len(clq)}: {sorted(list(clq))}")
         else:
             print("    Nenhum clique detectado com os parâmetros atuais.")
