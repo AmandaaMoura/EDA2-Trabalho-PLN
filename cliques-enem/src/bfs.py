@@ -80,11 +80,6 @@ def bfs_niveis(grafo: Grafo, origem):
 
     #retorna com as distancias calculadas
     return niveis
- 
-
-from queue_structure import Queue
-
-
 
 def imprimir_analise_bfs(componentes):
    #imprimir os resultados da análise BFS    
@@ -103,11 +98,11 @@ def bfs(grafo, origem, destino, aresta_bloqueada=None):
         return True
     
     visitados = {origem}
-    fila = Queue()
-    fila.enqueue(origem)
+    fila = Fila()
+    fila.enfileirar(origem)
 
-    while not fila.is_empty():
-        atual = fila.dequeue()
+    while not fila.esta_vazia():
+        atual = fila.desenfileirar()
         for vizinho in grafo.nomes_vizinhos(atual):
             if vizinho in visitados:
                 continue
@@ -118,7 +113,7 @@ def bfs(grafo, origem, destino, aresta_bloqueada=None):
             if vizinho == destino:
                 return True
             visitados.add(vizinho)
-            fila.enqueue(vizinho)
+            fila.enfileirar(vizinho)
     return False
 
 if __name__ == "__main__":
