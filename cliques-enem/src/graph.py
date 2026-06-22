@@ -6,6 +6,14 @@ from bfs import bfs
 class Graph:
     """Grafo não direcionado."""
 
+    def obter_todos_vertices(self):
+        """Atalho de compatibilidade para o módulo BFS."""
+        return list(self.listar_vertices())
+    
+    def obter_vizinhos(self, vertice):
+        """Atalho de compatibilidade para o método nomes_vizinhos exigido pela BFS."""
+        return list(self.nomes_vizinhos(vertice))
+
     def __init__(self, vertices=None):
         self.vertices = set(vertices or [])
         self.adj = {vertex: {} for vertex in self.vertices}
@@ -96,8 +104,8 @@ def definir_aresta(grafo, u, v, peso):  #nao soma os pesos igual ao add_coocorre
 
 #podando em relacao ao peso medio e maximo do corpus
 
-FATOR_MEDIA = 0.5
-FATOR_MAX = 0.25
+FATOR_MEDIA = 0.4 # -> correção do peso
+FATOR_MAX = 0.12 # -> correção do peso 
 
 def poda_peso_relativo(grafo, fator_media=FATOR_MEDIA, fator_max=FATOR_MAX):
     
@@ -135,7 +143,7 @@ def poda_pontes(grafo):
             definir_aresta(novo, u, v, peso)
     return novo
 
-def aplicar_podas(grafo, min_peso=2, fator_media=0.5, fator_max=0.25, usar_pontes=True):
+def aplicar_podas(grafo, min_peso=2, fator_media=0.4, fator_max=0.12, usar_pontes=True):
     log = []
 
     def registrar(etapa, g):

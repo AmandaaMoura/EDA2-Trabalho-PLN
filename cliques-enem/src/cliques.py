@@ -1,25 +1,20 @@
 import os
 from graph import Graph, construir_grafo_de_coocorrencia, carregar_corpus, aplicar_podas
 
-# parâmetros configuráveis
-
 MIN_PESO_ARESTA = 2
-# limiar mínimo de coocorrência para uma aresta ser usada.
-# arestas com peso < 2 ocorreram em apenas 1 sentença — ruído.
-# calibrar empiricamente: testar 2 e 3.
+# mínimo de coocorrência definido para uma aresta ser usada.
+# arestas com peso < 2 ocorreram em apenas 1 sentença — evitar.
 
 TAMANHO_MINIMO_CLIQUE = 4
-# tamanho mínimo para um clique ser registrado.
-# pares (2) e triângulos (3) são trivialmente comuns.
-# cliques >= 4 representam associações lexicais realmente densas.
-
+# tamanho mínimo para um clique ser conisderado na nossa analise.
+# pares (2) e triângulos (3) são bem comuns.
 
 # filtragem do grafo por peso de aresta
 
 def filtrar_adjacencia(grafo: Graph, min_peso: int = MIN_PESO_ARESTA) -> dict:
 # constrói dicionário de adjacência filtrado por peso mínimo.
 # estrutura: { palavra: set(vizinhos com peso >= min_peso) }
-# Usar sets permite verificar adjacência em O(1) e fazer interseções eficientes durante a DFS.
+# Usar sets permite verificar adjacência em O(1) e fazer melhores interseções durante a DFS.
 
     adj = {}
     for vertice in grafo.listar_vertices():
@@ -187,9 +182,7 @@ def imprimir_relatorio(cliques: list, label: str = "Grupo", top_n: int = 5):
         palavras = ", ".join(sorted(c))
         print(f"    {i}. [{len(c)} palavras] {palavras}")
     print(linha + "\n")
-
-
-# execução
+    
 
 if __name__ == "__main__":
     CORPUS_A = os.path.join("..", "data", "processed", "corpus_nota1000.json")
