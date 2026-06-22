@@ -1,5 +1,5 @@
 import os
-from graph import Graph, construir_grafo_de_coocorrencia, carregar_corpus, aplicar_podas
+from grafo import Graph, construir_grafo_de_coocorrencia, carregar_corpus, aplicar_podas
 
 MIN_PESO_ARESTA = 2
 # mínimo de coocorrência definido para uma aresta ser usada.

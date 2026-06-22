@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # importo módulos de outros arquivos
-from graph import carregar_corpus, construir_grafo_de_coocorrencia, aplicar_podas, estatisticas_grafo
+from grafo import carregar_corpus, construir_grafo_de_coocorrencia, aplicar_podas, estatisticas_grafo
 from cliques import encontrar_cliques, estatisticas_cliques
 from bfs import componentes_conexos
 

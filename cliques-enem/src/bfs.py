@@ -1,7 +1,7 @@
 from fila import Fila
-from grafo import Grafo
+from grafo import Graph, definir_aresta
 
-def componentes_conexos(grafo: Grafo):
+def componentes_conexos(grafo: Graph):
     visitados = set()  #conjunto para rastrear os vértices visitados
     componentes = []  #lista para armazenar os componentes conexos
 
@@ -38,7 +38,7 @@ def componentes_conexos(grafo: Grafo):
 
     return componentes
 
-def bfs_niveis(grafo: Grafo, origem):
+def bfs_niveis(grafo: Graph, origem):
     #retorna a profundidade
 
     #busca as palavras que existem no grafo
