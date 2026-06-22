@@ -6,6 +6,14 @@ from bfs import bfs
 class Graph:
     """Grafo não direcionado."""
 
+    def obter_todos_vertices(self):
+        """Atalho de compatibilidade para o módulo BFS."""
+        return list(self.listar_vertices())
+    
+    def obter_vizinhos(self, vertice):
+        """Atalho de compatibilidade para o método nomes_vizinhos exigido pela BFS."""
+        return list(self.nomes_vizinhos(vertice))
+
     def __init__(self, vertices=None):
         self.vertices = set(vertices or [])
         self.adj = {vertex: {} for vertex in self.vertices}
