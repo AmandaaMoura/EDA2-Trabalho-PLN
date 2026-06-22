@@ -1,5 +1,3 @@
-# cliques-enem/src/analise.py
-
 import os
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -9,7 +7,7 @@ from graph import carregar_corpus, construir_grafo_de_coocorrencia, aplicar_poda
 from cliques import encontrar_cliques, estatisticas_cliques
 from bfs import componentes_conexos
 
-# JSONs oficiais q
+# JSONs oficiais 
 CORPUS_A = os.path.join("data", "processed", "corpus_nota1000.json")
 CORPUS_B = os.path.join("data", "processed", "corpus_abaixo1000.json")
 
@@ -17,10 +15,9 @@ CORPUS_B = os.path.join("data", "processed", "corpus_abaixo1000.json")
 PASTA_FIGURAS = os.path.join("cliques-enem", "results", "figures")
 
 def gerar_graficos_comparativos_globais(stats_a, stats_b):
-    """Gera gráficos estruturais globais exigidos no escopo do R5."""
     os.makedirs(PASTA_FIGURAS, exist_ok=True)
     
-    # 1. gráfco de métricas gerais, cliques...
+    #métricas gerais
     categorias = [
         'Total de Cliques',
         'Tamanho Médio dos Cliques',
@@ -197,7 +194,7 @@ def main():
         else:
             print("    Nenhum clique detectado com os parâmetros atuais.")
         
-        # gero os novos gráficos
+        # gera os novos gráficos
         gerar_graficos_comparativos_globais(dados_a, dados_b)
         print(f"\n[SUCESSO]")
 
