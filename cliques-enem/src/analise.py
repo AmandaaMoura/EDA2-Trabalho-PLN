@@ -1,6 +1,6 @@
 import os
-import matplotlib.pyplot as plt
-import pandas as pd
+import matplotlib.pyplot as plt # uso para gerar os gráficos
+import pandas as pd # gero as barras dos gráficos
 
 # importo módulos de outros arquivos
 from grafo import carregar_corpus, construir_grafo_de_coocorrencia, aplicar_podas, estatisticas_grafo
@@ -96,7 +96,7 @@ def analisar_grupo_global(caminho_corpus, label):
 
     comp = componentes_conexos(g_podado)
     
-    # enumeração completa de cliques
+    # enumero os cliques completos
     cliques_encontrados = encontrar_cliques(g_podado, min_peso=2, tamanho_minimo=4)
     stats_c = estatisticas_cliques(cliques_encontrados)
     
@@ -112,9 +112,9 @@ def main():
     dados_b = analisar_grupo_global(CORPUS_B, "Grupo B (Abaixo de 1000)")
     
     if dados_a and dados_b:
-        # exibição da tabela completa
+        # exibo a tabela completa
         linha = "-" * 85
-        print(f"\n{linha}\nTABELA COMPARATIVA DE RESULTADOS GLOBAIS (R5)\n{linha}")
+        print(f"\n{linha}\nTABELA COMPARATIVA DE RESULTADOS GLOBAIS\n{linha}")
         print(f"{'Métrica Medida':<40} | {'Grupo A':<18} | {'Grupo B':<18}")
         print(linha)
         print(f"{'Nº Total de Cliques (>= 4)':<40} | {dados_a['cliques']['total']:<18} | {dados_b['cliques']['total']:<18}")
@@ -125,7 +125,7 @@ def main():
         print(f"{'Arestas Restantes (Pós-Poda)':<40} | {dados_a['grafo']['arestas']:<18} | {dados_b['grafo']['arestas']:<18}")
         print(linha)
         
-        # mapeamento quantitativo
+        # mapeio quantitativamente os cliques
         print("\n--> Mapeamento dos Cliques:")
         
         print(f"\n  [Grupo A - Nota 1000] - 30/30 Cliques:")
@@ -144,7 +144,7 @@ def main():
         else:
             print("    Nenhum clique detectado com os parâmetros atuais.")
         
-        # gera os novos gráficos
+        # gero os novos gráficos
         gerar_graficos_comparativos_globais(dados_a, dados_b)
         print(f"\n[SUCESSO]")
 
